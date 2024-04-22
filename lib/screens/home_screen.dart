@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:social_media_app/secrets.dart';
 
-import 'widgets/feed_card.dart';
+import '../widgets/feed_card.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -20,19 +20,23 @@ class _FeedScreenState extends State<FeedScreen> {
     // Headers for the API call
     var headers = {
       'X-RapidAPI-Host': 'twitter241.p.rapidapi.com',
-      'X-RapidAPI-Key': '8170f21ddfmshd73754ab39afe25p1329edjsn7b090cfca454'
+      'X-RapidAPI-Key': Secrets.X_RapidAPI_Key,
     };
+
+    int uidNumber = 1514555668946366468; //Your twitter user ID here
+    int countNumber = 20; //Number of tweets to fetch
 
     var response = await http.get(
       Uri.parse(
-          'https://twitter241.p.rapidapi.com/user-tweets?user=1514555668946366468&count=100'),
+        'https://twitter241.p.rapidapi.com/user-tweets?user=$uidNumber&count=$countNumber',
+      ),
       headers: headers,
     );
 
     if (response.statusCode == 200) {
       List temp_data = jsonDecode(response.body)['result']['timeline']
           ['instructions'][2]['entries'];
-      print(temp_data);
+      // print(temp_data);
       setState(() {
         data = temp_data;
         value = 2;
