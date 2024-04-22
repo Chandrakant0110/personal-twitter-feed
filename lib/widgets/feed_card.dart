@@ -5,20 +5,37 @@ import 'package:like_button/like_button.dart';
 import 'package:social_media_app/screens/comment_screen.dart';
 
 class FeedCard extends StatelessWidget {
-  final dynamic apiData;
+  final int index;
+  final List<dynamic> apiData;
   const FeedCard({
     Key? key,
     required this.apiData,
+    required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var accDetails = apiData['core']['user_results']['result']['legacy'];
-    var tweetData = apiData['legacy'];
+    Map<String, dynamic> individualData = {};
+    try {
+      
+      individualData =
+          apiData[index]['content']['itemContent']['tweet_results']['result'];
+    } catch (e) {
+      print(e);
+    }
 
-    String name = accDetails['screen_name'];
-    String followers_count = accDetails['followers_count'];
-// String
+    var accDetails = individualData['core']['user_results']['result']['legacy'];
+    var tweetData = individualData['legacy'];
+
+    String userName = '${accDetails['screen_name']}';
+    String name = '${accDetails['name']}';
+    String followersCount = '${accDetails['followers_count']}';
+    String profileImageUrl = '${accDetails['profile_image_url_https']}';
+
+    int likeCount = tweetData['favorite_count'];
+    String tweetText = tweetData['full_text'];
+    // String followers_count = accDetails['followers_count'];
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -27,8 +44,9 @@ class FeedCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
+                  backgroundImage: NetworkImage(profileImageUrl),
                   backgroundColor: Colors.black45,
                 ),
                 const SizedBox(
@@ -44,9 +62,9 @@ class FeedCard extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                const Text(
-                  '@username',
-                  style: TextStyle(
+                Text(
+                  '@$userName',
+                  style: const TextStyle(
                     color: Colors.blueAccent,
                   ),
                 ),
@@ -55,15 +73,15 @@ class FeedCard extends StatelessWidget {
             const SizedBox(
               height: 8,
             ),
-            const Text('Tweet Details'),
+            Text(tweetText),
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const LikeButton(
-                    likeCount: 250,
+                  LikeButton(
+                    likeCount: likeCount,
                   ),
                   IconButton(
                     onPressed: () {

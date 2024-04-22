@@ -10,12 +10,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  dynamic data;
+  List<dynamic> data = [];
   @override
   void initState() {
-    data = await API
-        .getTweets(); // Get tweet data from the server when the screen is opened
+    // Get tweet data from the server when the screen is opened
+    getData();
     super.initState();
+  }
+
+  Future<void> getData() async {
+    data = await API.getTweets();
+    // setState(() {});
   }
 
   @override
@@ -29,20 +34,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              var fetchData = await API.getTweets();
+              setState(() {
+                data = fetchData;
+              });
+            },
+            icon: const Icon(Icons.refresh_sharp),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            var individualData = data[index]['content']['itemContent']
-                ['tweet_results']['result'];
-
-            return FeedCard(
-              apiData: individualData,
-            );
-          },
-        ),
-      ),
+      body: data == null || data == []
+          ? const Text('Please refresh')
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return FeedCard(
+                    apiData: data,
+                    index: index,
+                  );
+                },
+              ),
+            ),
     );
   }
 }
