@@ -6,7 +6,7 @@ import 'package:social_media_app/secrets.dart';
 import '../widgets/feed_card.dart';
 
 class FeedScreen extends StatefulWidget {
-  const FeedScreen({super.key});
+  const FeedScreen({Key? key}) : super(key: key);
 
   @override
   State<FeedScreen> createState() => _FeedScreenState();
@@ -23,8 +23,8 @@ class _FeedScreenState extends State<FeedScreen> {
       'X-RapidAPI-Key': Secrets.X_RapidAPI_Key,
     };
 
-    int uidNumber = 1514555668946366468; //Your twitter user ID here
-    int countNumber = 20; //Number of tweets to fetch
+    String uidNumber = '1514555668946366468'; //Your twitter user ID here
+    String countNumber = '20'; //Number of tweets to fetch
 
     var response = await http.get(
       Uri.parse(
@@ -69,17 +69,26 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
       body: value == 1
           ? const Center(
-              child: Text('Please refresh using Refresh Icon.'),
+              child: Text(
+                'Please refresh using Refresh Icon.',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView.builder(
                 // itemCount: 20, //data.length,
                 itemBuilder: (context, index) {
-                  if (index < 18 &&
-                      data[index]['content']['clientEventInfo']['component'] ==
-                          'tweet') {
-                    return FeedCard(apiData: data, index: index);
+                  if (index < 18) {
+                    if (data[index]['content']['clientEventInfo']
+                            ['component'] ==
+                        'tweet') {
+                      return FeedCard(apiData: data, index: index);
+                    } else {
+                      return const SizedBox();
+                    }
                   }
                   return const Text('End of the API Response.');
                 },
