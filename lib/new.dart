@@ -25,7 +25,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
     var response = await http.get(
       Uri.parse(
-          'https://twitter241.p.rapidapi.com/user-tweets?user=1514555668946366468&count=20'),
+          'https://twitter241.p.rapidapi.com/user-tweets?user=1514555668946366468&count=100'),
       headers: headers,
     );
 
@@ -64,19 +64,21 @@ class _FeedScreenState extends State<FeedScreen> {
         ],
       ),
       body: value == 1
-          ? Text('data')
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    for (int i = 0; i < 18; i++)
-                      if (data[i]['content']['clientEventInfo']['component'] ==
-                          'tweet')
-                        FeedCard(apiData: data, index: i),
-                    // Text('data $value'),
-                  ],
-                ),
+          ? const Center(
+              child: Text('Please refresh using Refresh Icon.'),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                // itemCount: 20, //data.length,
+                itemBuilder: (context, index) {
+                  if (index < 18 &&
+                      data[index]['content']['clientEventInfo']['component'] ==
+                          'tweet') {
+                    return FeedCard(apiData: data, index: index);
+                  }
+                  return const Text('End of the API Response.');
+                },
               ),
             ),
     );

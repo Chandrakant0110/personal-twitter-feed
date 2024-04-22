@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // Get tweet data from the server when the screen is opened
-    getData();
+    // getData();
     super.initState();
   }
 
