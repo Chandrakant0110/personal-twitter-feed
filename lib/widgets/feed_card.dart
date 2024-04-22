@@ -17,7 +17,6 @@ class FeedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, dynamic> individualData = {};
     try {
-      
       individualData =
           apiData[index]['content']['itemContent']['tweet_results']['result'];
     } catch (e) {
@@ -35,6 +34,22 @@ class FeedCard extends StatelessWidget {
     int likeCount = tweetData['favorite_count'];
     String tweetText = tweetData['full_text'];
     // String followers_count = accDetails['followers_count'];
+    Map<String, dynamic> tempData1 = tweetData['entities'];
+    List media = [];
+
+    if (tempData1.containsKey('media')) {
+      media = tempData1['media'];
+    }
+    String mediaUrl = '';
+    if (apiData[index]['content']['clientEventInfo']['component'] == 'tweet' &&
+        media.isNotEmpty) {
+      String url = media[0]['media_url_https'];
+
+      if (url.contains('.jpg')) {
+        mediaUrl = url;
+        print('this is the url of jpg -----  $mediaUrl');
+      }
+    }
 
     return Card(
       child: Padding(
@@ -74,6 +89,10 @@ class FeedCard extends StatelessWidget {
               height: 8,
             ),
             Text(tweetText),
+            if (mediaUrl != '') ...[
+              Image.network(mediaUrl),
+              const SizedBox(height: 4),
+            ],
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),

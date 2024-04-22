@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Personal Twitter Feed',
+      
       theme: ThemeData(
         colorScheme: const ColorScheme.dark(primary: Colors.white),
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

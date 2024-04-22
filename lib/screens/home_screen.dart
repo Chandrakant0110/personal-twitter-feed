@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:like_button/like_button.dart';
 import 'package:social_media_app/secrets.dart';
+import 'package:social_media_app/widgets/drawer.dart';
 
 import '../widgets/feed_card.dart';
 
@@ -67,6 +69,7 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ],
       ),
+      drawer: const CustomDrawer(),
       body: value == 1
           ? const Center(
               child: Text(
